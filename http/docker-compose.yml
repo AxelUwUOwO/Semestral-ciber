@@ -19,8 +19,6 @@ services:
   redis:
     image: redis:latest
     restart: always
-    ports:
-      - '6379:6379'
     networks: 
       - wpsite
   # MYSQL Database
@@ -41,10 +39,7 @@ services:
   wordpress:
     depends_on:
       - database 
-    build: 
-      context: .
-      dockerfile: Dockerfile
-
+    image: wordpress:latest
     restart: unless-stopped
     volumes: 
       - './:/var/www/html'
@@ -61,10 +56,7 @@ services:
   wordpress2:
     depends_on:
       - database 
-    build: 
-      context: .
-      dockerfile: Dockerfile
-
+    image: wordpress:latest
     restart: unless-stopped
     volumes: 
       - './:/var/www/html'
@@ -76,19 +68,6 @@ services:
       WORDPRESS_CONFIG_EXTRA: 
         define('WP_REDIS_HOST', 'redis');
     networks: 
-      - wpsite
-  # PHPMYADMIN
-  phpmyadmin:
-    depends_on: 
-      - database
-    image: phpmyadmin/phpmyadmin
-    restart: always
-    ports: 
-      - '8080:80'
-    environment: 
-      PMA_HOST: database
-      MYSQL_ROOT_PASSWORD: password
-    networks:
       - wpsite
         
 networks:
